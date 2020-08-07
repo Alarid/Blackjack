@@ -12,7 +12,7 @@ export default {
   },
   actions: {
     fillDeck(context) {
-      const colors = ['clubs', 'diamonds', 'hears', 'spades'];
+      const colors = ['clubs', 'diamonds', 'hearts', 'spades'];
       const heads = ['jack', 'queen', 'king', 'ace'];
       const cards = [];
 

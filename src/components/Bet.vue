@@ -15,12 +15,20 @@
       <b-button
         variant="info"
         size="lg"
-        id="dealBtn"
-        class="px-5 py-3"
+        class="px-5 py-3 deal-btn"
         :disabled="total<=0"
         v-if="playerIsBetting"
         @click="deal">
         DEAL
+      </b-button>
+
+      <b-button
+        variant="info"
+        size="lg"
+        class="px-5 py-3 draw-btn"
+        v-if="!playerIsBetting"
+        @click="draw">
+        Draw
       </b-button>
     </div>
   </div>
@@ -68,6 +76,10 @@ export default {
     deal() {
       this.$emit('betDone');
     },
+    draw() {
+      console.log('draw');
+      this.$emit('draw');
+    },
   },
   components: {
     Token,
@@ -97,7 +109,7 @@ export default {
     font-weight: bold;
   }
 
-  #dealBtn {
+  .deal-btn, .draw-btn {
     position: absolute;
     top: 50%;
     left: 50%;

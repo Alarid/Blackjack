@@ -3,18 +3,25 @@
     <Bet ref="bet"
       :playerIsBetting="isBetting"
       @tokenRemoved="tokenRemoved"
-      @betDone="betDone"/>
+      @betDone="betDone"
+      @draw="needCard"/>
 
-    <Bank ref="bank"
+    <PlayerWallet ref="playerWallet"
+      :initialCash="initialCash"
       :playerIsBetting="isBetting"
       @tokenBet="betToken"
       @clearBet="clearBet"/>
+
+    <Hand ref="hand"
+      class="player-cards"
+      :cards="cards" />
   </div>
 </template>
 
 <script>
-import Bank from '@/components/Bank.vue';
+import PlayerWallet from '@/components/PlayerWallet.vue';
 import Bet from '@/components/Bet.vue';
+import Hand from '@/components/Hand.vue';
 
 export default {
   name: 'Player',
@@ -22,25 +29,37 @@ export default {
     return {
       isBetting: true,
       tokensBet: [],
+      cards: [],
     };
+  },
+  props: {
+    initialCash: { type: Number, default: 1000 },
   },
   methods: {
     betToken(val) {
       this.$refs.bet.add(this.$store.getters['tokens/token'](val));
     },
     tokenRemoved(val) {
-      this.$refs.bank.refundToken(val);
+      this.$refs.playerWallet.refundToken(val);
     },
     clearBet() {
       this.$refs.bet.clearBet();
     },
     betDone() {
-      this.playerIsBetting = false;
+      this.isBetting = false;
+      this.$emit('betDone');
+    },
+    dealCard(card) {
+      this.cards.push(card);
+    },
+    needCard() {
+      this.$emit('needCard');
     },
   },
   components: {
-    Bank,
+    PlayerWallet,
     Bet,
+    Hand,
   },
 };
 </script>

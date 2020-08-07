@@ -1,6 +1,6 @@
 <template>
-  <div class="bank w-50">
-    <div class="bank-header d-inline-block">
+  <div class="wallet w-50">
+    <div class="wallet-header d-inline-block">
       <p>Bank: <strong>{{ money }} $</strong></p>
 
       <b-button
@@ -33,14 +33,14 @@
 import Token from '@/components/Token.vue';
 
 export default {
-  name: 'Bank',
+  name: 'PlayerWallet',
   data() {
     return {
       money: this.initialCash,
     };
   },
   props: {
-    initialCash: { type: Number, default: 1000 },
+    initialCash: { type: Number, required: true },
     playerIsBetting: { type: Boolean, default: true },
   },
   computed: {
@@ -93,12 +93,12 @@ export default {
 <style scoped lang="scss">
 @import '@/scss/vars';
 
-.bank {
+.wallet {
   position: absolute;
   bottom: 0;
   left: 15px;
 
-  .bank-header {
+  .wallet-header {
     background-color: #11354F;
     border-radius: 0.5rem 0.5rem 0 0;
     border: 1px solid black;

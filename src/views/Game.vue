@@ -1,14 +1,17 @@
 <template>
   <BoardWrapper>
-    <Deck ref="deck"/>
+    <Dealer ref="dealer"
+      @dealCard="dealCard"/>
 
-    <Player/>
+    <Player ref="player"
+      @betDone="betDone"
+      @needCard="playerNeedCard"/>
   </BoardWrapper>
 </template>
 
 <script>
 import BoardWrapper from '@/components/BoardWrapper.vue';
-import Deck from '@/components/Deck.vue';
+import Dealer from '@/components/Dealer.vue';
 import Player from '@/components/Player.vue';
 
 export default {
@@ -19,11 +22,20 @@ export default {
     };
   },
   methods: {
-
+    betDone() {
+      this.$refs.dealer.dealCards()
+        .then(() => console.log('cards dealt'));
+    },
+    dealCard(card) {
+      this.$refs.player.dealCard(card);
+    },
+    playerNeedCard() {
+      this.$refs.dealer.dealCardToPlayer();
+    },
   },
   components: {
     BoardWrapper,
-    Deck,
+    Dealer,
     Player,
   },
 };

@@ -2,7 +2,6 @@
   <div class="deck">
     <img alt="deck icon" src="../assets/deck.png">
     <span class="font-weight-bold">{{cards.length}}</span>
-    <img v-if="drawedCard" :src="cardImage" class="d-block mt-5 mx-auto bg-white rounded"/>
   </div>
 </template>
 
@@ -44,6 +43,7 @@ export default {
         this.shuffleDeck();
       }
       this.drawedCard = this.cards.pop();
+      return this.drawedCard;
     },
   },
 };
