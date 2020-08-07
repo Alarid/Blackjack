@@ -3,8 +3,9 @@
     <Deck ref="deck"/>
 
     <Bet ref="bet"
-      v-if="playerIsBetting"
-      @tokenRemoved="tokenRemoved"/>
+      :playerIsBetting="playerIsBetting"
+      @tokenRemoved="tokenRemoved"
+      @betDone="betDone"/>
 
     <Bank ref="bank"
       :playerIsBetting="playerIsBetting"
@@ -38,8 +39,10 @@ export default {
       this.$refs.bank.refundToken(val);
     },
     clearBet() {
-      // this.$refs.bet.tokens.forEach((token) => this.$refs.bank.refundToken(token.value));
       this.$refs.bet.clearBet();
+    },
+    betDone() {
+      this.playerIsBetting = false;
     },
   },
   components: {

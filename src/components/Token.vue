@@ -35,6 +35,13 @@ export default {
   width: 80px;
   height: 80px;
   text-align: center;
-  @include box-shadow(3px 3px 5px 2px rgba(0,0,0,0.6));
+
+  &:not(.no-shadow) {
+    @include box-shadow(3px 3px 5px 2px rgba(0,0,0,0.6));
+  }
+  &.no-shadow {
+    // Small shadow
+    @include box-shadow(2px 2px 2px 2px rgba(0,0,0,0.6));
+  }
 }
 </style>
