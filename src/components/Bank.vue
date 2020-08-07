@@ -2,10 +2,10 @@
   <div class="bank w-50">
     <div class="bank-header d-inline-block">
       <p>Bank: <strong>{{ money }} $</strong></p>
-      <b-button variant="info" size="sm" class="mx-auto d-block w-75 mt-2" v-if="playerIsBetting"
-        @click="allIn">
-        All in
-      </b-button>
+      <b-button variant="info" size="sm" class="mx-auto d-block w-75 mt-2" v-if="showAllIn"
+        @click="allIn"> All in </b-button>
+      <b-button variant="info" size="sm" class="mx-auto d-block w-75 mt-2" v-if="showClearBet"
+        @click="clearBet"> Clear bet </b-button>
     </div>
     <div class="tokens" v-if="playerIsBetting">
       <Token v-for="(token, idx) in availableTokens" :key="idx"
@@ -36,6 +36,12 @@ export default {
     availableTokens() {
       return this.tokens.filter((token) => token.value <= this.money);
     },
+    showAllIn() {
+      return this.playerIsBetting && this.money > 0;
+    },
+    showClearBet() {
+      return this.playerIsBetting && this.money === 0;
+    },
   },
   mounted() {
     this.betToken(100);
@@ -48,11 +54,15 @@ export default {
     refundToken(val) {
       this.money += val;
     },
-    isTokenVisible(val) {
-      return this.money - val < 0;
-    },
     allIn() {
-      console.log('all in');
+      this.tokens.slice().sort((t1, t2) => t2.value > t1.value).forEach((token) => {
+        while (this.availableTokens.filter((t) => t.value === token.value).length > 0) {
+          this.betToken(token.value);
+        }
+      });
+    },
+    clearBet() {
+      this.$emit('clearBet');
     },
   },
   components: {

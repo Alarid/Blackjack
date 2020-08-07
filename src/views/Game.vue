@@ -1,8 +1,15 @@
 <template>
   <BoardWrapper>
     <Deck ref="deck"/>
-    <Bet ref="bet" v-if="playerIsBetting" @tokenRemoved="tokenRemoved"/>
-    <Bank ref="bank" :playerIsBetting="playerIsBetting" @tokenBet="betToken"/>
+
+    <Bet ref="bet"
+      v-if="playerIsBetting"
+      @tokenRemoved="tokenRemoved"/>
+
+    <Bank ref="bank"
+      :playerIsBetting="playerIsBetting"
+      @tokenBet="betToken"
+      @clearBet="clearBet"/>
   </BoardWrapper>
 </template>
 
@@ -29,6 +36,10 @@ export default {
     },
     tokenRemoved(val) {
       this.$refs.bank.refundToken(val);
+    },
+    clearBet() {
+      // this.$refs.bet.tokens.forEach((token) => this.$refs.bank.refundToken(token.value));
+      this.$refs.bet.clearBet();
     },
   },
   components: {

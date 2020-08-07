@@ -39,6 +39,10 @@ export default {
       this.$emit('tokenRemoved', val);
       this.tokens.splice(idx, 1);
     },
+    clearBet() {
+      this.tokens.forEach((token) => this.$emit('tokenRemoved', token.value));
+      this.tokens = [];
+    },
   },
   components: {
     Token,
