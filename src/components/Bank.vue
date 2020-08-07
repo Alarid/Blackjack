@@ -2,14 +2,28 @@
   <div class="bank w-50">
     <div class="bank-header d-inline-block">
       <p>Bank: <strong>{{ money }} $</strong></p>
-      <b-button variant="info" size="sm" class="mx-auto d-block w-75 mt-2" v-if="showAllIn"
+
+      <b-button
+        variant="info"
+        size="sm"
+        class="mx-auto d-block w-75 mt-2"
+        v-if="showAllIn"
         @click="allIn"> All in </b-button>
-      <b-button variant="info" size="sm" class="mx-auto d-block w-75 mt-2" v-if="showClearBet"
+
+      <b-button
+        variant="info"
+        size="sm"
+        class="mx-auto d-block w-75 mt-2"
+        v-if="showClearBet"
         @click="clearBet"> Clear bet </b-button>
     </div>
+
     <div class="tokens" v-if="playerIsBetting">
-      <Token v-for="(token, idx) in availableTokens" :key="idx"
-        :variant="token.variant" :border="token.border" :value="token.value"
+      <Token v-for="(token, idx) in tokens" :key="idx"
+        :variant="token.variant"
+        :border="token.border"
+        :value="token.value"
+        v-show="isTokenVisible(token.value)"
         @click.native="betToken(token.value)"/>
     </div>
   </div>
@@ -47,9 +61,14 @@ export default {
     this.betToken(100);
   },
   methods: {
+    isTokenVisible(val) {
+      return this.money - val >= 0;
+    },
     betToken(val) {
-      this.money -= val;
-      this.$emit('tokenBet', val);
+      if (this.isTokenVisible(val)) {
+        this.money -= val;
+        this.$emit('tokenBet', val);
+      }
     },
     refundToken(val) {
       this.money += val;
@@ -72,6 +91,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '@/scss/vars';
+
 .bank {
   position: absolute;
   bottom: 0;
@@ -93,10 +114,12 @@ export default {
   }
 
   .tokens {
-    padding: 30px 15px 15px;
+    padding: $bank-tokens-pt 15px $bank-tokens-pb;
     background-color: #11354F;
     border: 1px solid black;
     border-radius: 0 0.5rem 0 0;
+    min-height: calc(#{$token-width} * 2 + #{$token-mb} * 2 + #{$bank-tokens-pt}
+      + #{$bank-tokens-pb} + 5px);
   }
 }
 </style>

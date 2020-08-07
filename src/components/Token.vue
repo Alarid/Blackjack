@@ -1,5 +1,10 @@
 <template>
-  <b-button :variant="variant" :size="size" :class="getClass">{{value}}</b-button>
+  <b-button
+    :size="size"
+    :class="getClass"
+    :style="{ backgroundColor: bgColor }">
+    {{value}}
+  </b-button>
 </template>
 
 <script>
@@ -14,27 +19,31 @@ export default {
   },
   computed: {
     getClass() {
-      return `token border-${this.border} ${this.col}`;
+      return `token border-${this.border} ${this.col} ${this.textColor}`;
+    },
+    bgColor() {
+      return this.$store.getters['tokens/tokenColor'](this.variant);
+    },
+    textColor() {
+      return this.variant === 'light' ? 'text-dark' : 'text-white';
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
-@mixin box-shadow($value) {
-  -webkit-box-shadow: $value;
-  -moz-box-shadow: $value;
-  box-shadow: $value;
-}
+@import '@/scss/mixins';
+@import '@/scss/vars';
 
 .token {
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: $token-mr;
+  margin-bottom: $token-mb;
   border-radius: 100%;
-  border-width: 5px;
-  width: 80px;
-  height: 80px;
+  border-width: $token-border-width;
+  width: $token-width;
+  height: $token-width;
   text-align: center;
+  font-weight: bold;
 
   &:not(.no-shadow) {
     @include box-shadow(3px 3px 5px 2px rgba(0,0,0,0.6));
