@@ -14,7 +14,8 @@
 
     <Hand ref="hand"
       class="player-cards"
-      :cards="cards" />
+      :cards="cards"
+      owner="Player" />
   </div>
 </template>
 

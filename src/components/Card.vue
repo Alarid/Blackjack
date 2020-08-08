@@ -17,11 +17,12 @@ export default {
   props: {
     filename: { type: String, required: true },
     idxInHand: { type: Number, required: true },
+    hidden: { type: Boolean, required: false, default: false },
   },
   computed: {
     src() {
       // eslint-disable-next-line import/no-dynamic-require, global-require
-      return require(`../assets/cards/${this.filename}`);
+      return require(`../assets/cards/${this.hidden ? 'back.png' : this.filename}`);
     },
     xOffset() {
       return this.idxInHand * this.offset;

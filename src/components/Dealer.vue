@@ -4,7 +4,8 @@
 
     <Hand ref="hand"
       class="dealer-cards"
-      :cards="cards" />
+      :cards="cards"
+      owner="Dealer" />
   </div>
 </template>
 
@@ -44,7 +45,12 @@ export default {
     },
     // Deal a card to self
     dealCardToSelf(next) {
-      this.cards.push(this.$refs.deck.drawCard());
+      const card = this.$refs.deck.drawCard();
+      if (this.cards.length === 0) {
+        // First card is hidden
+        card.hidden = true;
+      }
+      this.cards.push(card);
       if (next) {
         next();
       }

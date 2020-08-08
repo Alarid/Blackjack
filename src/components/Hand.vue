@@ -3,7 +3,16 @@
     <div class="cards position-relative h-100" :style="style">
       <Card v-for="(card, idx) in cards" :key="idx"
         :filename="card.image"
+        :hidden="card.hidden"
         :idxInHand="idx" />
+    </div>
+
+    <div class="score d-flex align-items-center rounded-circle">
+      <span class="d-block mx-auto"> {{ handScore }}</span>
+    </div>
+
+    <div class="owner-name">
+      {{ owner }}
     </div>
   </div>
 </template>
@@ -20,6 +29,7 @@ export default {
   },
   props: {
     cards: { type: Array, required: true },
+    owner: { type: String, required: true },
   },
   computed: {
     offset() {
@@ -30,6 +40,21 @@ export default {
         transform: `translateX(-${this.offset}px)`,
       };
     },
+    handScore() {
+      return this.cards.reduce((total, c) => total + this.getCardValue(c.value), 0);
+    },
+  },
+  methods: {
+    getCardValue(value) {
+      if (value !== 'ace') {
+        // eslint-disable-next-line radix
+        return parseInt(value);
+      }
+      const otherCardsTotal = this.cards
+        .filter((c) => c.value !== 'ace')
+        .reduce((total, c) => total + c.value, 0);
+      return otherCardsTotal >= 10 ? 1 : 11;
+    },
   },
   components: {
     Card,
@@ -39,6 +64,7 @@ export default {
 
 <style scoped lang="scss">
 $margin: 15px;
+$score-radius: 80px;
 
 .cards-area {
   position: absolute;
@@ -52,6 +78,26 @@ $margin: 15px;
 
   &.dealer-cards {
     top: $margin;
+  }
+
+  .score {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) translateX(250px);
+    width: $score-radius;
+    height: $score-radius;
+    font-weight: bold;
+    font-size: 22pt;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+  }
+
+  .owner-name {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) translateX(350px);
+    font-weight: bold;
+    font-size: 18pt;
   }
 }
 </style>
