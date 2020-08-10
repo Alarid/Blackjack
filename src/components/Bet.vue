@@ -21,20 +21,13 @@
         @click="deal">
         DEAL
       </b-button>
-
-      <b-button
-        variant="info"
-        size="lg"
-        class="px-5 py-3 draw-btn"
-        v-if="!playerIsBetting"
-        @click="draw">
-        Draw
-      </b-button>
     </div>
   </div>
 </template>
 
 <script>
+import { bus } from '@/main';
+
 import Token from '@/components/Token.vue';
 
 export default {
@@ -48,37 +41,44 @@ export default {
     value: { type: Number, default: 100 },
     playerIsBetting: { type: Boolean, required: true },
   },
+  created() {
+    bus.$on('tokenBet', (val) => this.add(this.$store.getters['tokens/token'](val)));
+    bus.$on('clearBet', this.clearBet);
+  },
   computed: {
     total() {
       return this.tokens.reduce((total, token) => total + token.value, 0);
     },
   },
   methods: {
+    // Get the CSS classes of a token, depending on its index in the stack
     tokenClass(idx) {
       return {
         'stackable-token': true,
         'no-shadow': idx > 0,
       };
     },
+    // Add a token to the bet
     add(token) {
       this.tokens.push(token);
     },
+    // Remove a token from the bet
     remove(idx, val) {
       if (this.playerIsBetting) {
-        this.$emit('tokenRemoved', val);
         this.tokens.splice(idx, 1);
+        bus.$emit('tokenRemoved', val);
       }
     },
-    clearBet() {
-      this.tokens.forEach((token) => this.$emit('tokenRemoved', token.value));
+    // Clear the bet, refunding tokens to the player or not
+    clearBet(noRefund = false) {
+      if (!noRefund) {
+        this.tokens.forEach((token) => bus.$emit('tokenRemoved', token.value));
+      }
       this.tokens = [];
     },
+    // Finish the bet
     deal() {
-      this.$emit('betDone');
-    },
-    draw() {
-      console.log('draw');
-      this.$emit('draw');
+      bus.$emit('betDone');
     },
   },
   components: {

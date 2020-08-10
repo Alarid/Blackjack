@@ -7,8 +7,8 @@
         :idxInHand="idx" />
     </div>
 
-    <div class="score d-flex align-items-center rounded-circle">
-      <span class="d-block mx-auto"> {{ handScore }}</span>
+    <div class="score d-flex align-items-center rounded-circle" v-if="showScore">
+      <span class="d-block mx-auto"> {{ score }}</span>
     </div>
 
     <div class="owner-name">
@@ -25,11 +25,20 @@ export default {
   data() {
     return {
       cardsOffet: 20,
+      score: 0,
     };
   },
   props: {
     cards: { type: Array, required: true },
     owner: { type: String, required: true },
+    showScore: { type: Boolean, required: true },
+  },
+  watch: {
+    // eslint-disable-next-line object-shorthand, func-names
+    cards: function (newCards) {
+      const totalizer = (total, c) => total + this.getCardValue(c.value);
+      this.score = newCards.filter((c) => !c.hidden).reduce(totalizer, 0);
+    },
   },
   computed: {
     offset() {
@@ -40,15 +49,12 @@ export default {
         transform: `translateX(-${this.offset}px)`,
       };
     },
-    handScore() {
-      return this.cards.reduce((total, c) => total + this.getCardValue(c.value), 0);
-    },
   },
   methods: {
     getCardValue(value) {
+      // Not an ace, returning value
       if (value !== 'ace') {
-        // eslint-disable-next-line radix
-        return parseInt(value);
+        return parseInt(value); // eslint-disable-line radix
       }
       const otherCardsTotal = this.cards
         .filter((c) => c.value !== 'ace')

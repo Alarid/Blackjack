@@ -12,6 +12,9 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
+// eslint-disable-next-line import/prefer-default-export
+export const bus = new Vue();
+
 new Vue({
   router,
   store,

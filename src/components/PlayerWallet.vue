@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { bus } from '@/main';
+
 import Token from '@/components/Token.vue';
 
 export default {
@@ -42,6 +44,7 @@ export default {
   props: {
     initialCash: { type: Number, required: true },
     playerIsBetting: { type: Boolean, default: true },
+    initialBet: { type: Number, required: true },
   },
   computed: {
     tokens() {
@@ -57,22 +60,27 @@ export default {
       return this.playerIsBetting && this.money === 0;
     },
   },
-  mounted() {
-    this.betToken(100);
+  created() {
+    bus.$on('tokenRemoved', this.refundToken);
+    this.betValue(this.initialBet);
   },
   methods: {
+    // A token is visible only if its value is contained in the remaining money
     isTokenVisible(val) {
       return this.money - val >= 0;
     },
+    // Bet a token, if its available
     betToken(val) {
       if (this.isTokenVisible(val)) {
         this.money -= val;
-        this.$emit('tokenBet', val);
+        bus.$emit('tokenBet', val);
       }
     },
+    // Refund a token's money
     refundToken(val) {
       this.money += val;
     },
+    // All in !!
     allIn() {
       this.tokens.slice().sort((t1, t2) => t2.value > t1.value).forEach((token) => {
         while (this.availableTokens.filter((t) => t.value === token.value).length > 0) {
@@ -80,8 +88,23 @@ export default {
         }
       });
     },
+    // Bet tokens to reach desired value
+    betValue(value) {
+      let remaining = value;
+      this.availableTokens.slice().sort((t1, t2) => t2.value > t1.value).forEach((token) => {
+        while (token.value <= remaining) {
+          this.betToken(token.value);
+          remaining -= token.value;
+        }
+      });
+    },
+    // Clear the bet
     clearBet() {
-      this.$emit('clearBet');
+      bus.$emit('clearBet');
+    },
+    // Add money to the wallet
+    addCash(cash) {
+      this.money += cash;
     },
   },
   components: {

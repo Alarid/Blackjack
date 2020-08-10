@@ -43,6 +43,7 @@ export default {
         this.shuffleDeck();
       }
       this.drawedCard = this.cards.pop();
+      this.drawedCard.hidden = false;
       return this.drawedCard;
     },
   },
