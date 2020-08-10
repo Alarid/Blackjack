@@ -7,12 +7,14 @@
         :idxInHand="idx" />
     </div>
 
-    <div class="score d-flex align-items-center rounded-circle" v-if="showScore">
-      <span class="d-block mx-auto"> {{ score }}</span>
-    </div>
+    <div v-if="showScore">
+      <div class="score d-flex align-items-center rounded-circle">
+        <span class="d-block mx-auto"> {{ score }}</span>
+      </div>
 
-    <div class="owner-name">
-      {{ owner }}
+      <div class="owner-name">
+        {{ owner }}
+      </div>
     </div>
   </div>
 </template>

@@ -2,13 +2,15 @@
   <div class="bet w-100">
     <div class="tokens postion-relative">
 
-      <Token v-for="(token, idx) in tokens" :key="idx"
-        :variant="token.variant"
-        :border="token.border"
-        :value="token.value"
-        @click.native="remove(idx, token.value)"
-        :class="tokenClass(idx)"
-        :style="{ transform: `translateY(-50%) translateX(-100%) translateX(-${idx * 2}px)` }"/>
+      <!-- <transition-group name="add-token"> -->
+        <Token v-for="(token, idx) in tokens" :key="idx"
+          :variant="token.variant"
+          :border="token.border"
+          :value="token.value"
+          @click.native="remove(idx, token.value)"
+          :class="tokenClass(idx)"
+          :style="{ transform: `translateY(-50%) translateX(-100%) translateX(-${idx * 2}px)` }"/>
+      <!-- </transition-group> -->
 
       <div class="total"> {{total}} $</div>
 
@@ -97,8 +99,8 @@ export default {
 
   .stackable-token {
     position: absolute;
-    top: 50%;
     left: 50%;
+    top: 50%;
   }
   .total {
     position: absolute;
@@ -115,5 +117,21 @@ export default {
     left: 50%;
     transform: translate(100%,-50%);
   }
+}
+
+.add-token-enter-active {
+  transition: all 0.25s ease-out;
+}
+
+.add-token-leave-active {
+  transition: all 0.25s ease-in;
+}
+
+.add-token-enter, .add-token-leave-to {
+  margin-top: 300px;
+}
+
+.add-token-enter-to, .add-token-leave {
+  margin-top: 0;
 }
 </style>
