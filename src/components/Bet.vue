@@ -52,6 +52,12 @@ export default {
       return this.tokens.reduce((total, token) => total + token.value, 0);
     },
   },
+  watch: {
+    // eslint-disable-next-line object-shorthand, func-names
+    tokens: function () {
+      bus.$emit('nbTokensInBet', this.tokens.length);
+    },
+  },
   methods: {
     // Get the CSS classes of a token, depending on its index in the stack
     tokenClass(idx) {

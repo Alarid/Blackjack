@@ -7,7 +7,8 @@
 
     <Actions ref="actions"
       v-if="isPlaying"
-      @stand="stand"/>
+      @stand="stand"
+      @double="double"/>
 
     <PlayerWallet ref="playerWallet"
       :initialCash="initialCash"
@@ -39,7 +40,6 @@ export default {
       isBetting: true,
       isPlaying: false,
       showHandScore: false,
-      tokensBet: [],
       cards: [],
       lastBet: 100, // initialzed with first bet
     };
@@ -75,6 +75,8 @@ export default {
           this.isPlaying = false;
           this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
           bus.$emit('playerBust', score);
+        } else if (this.isPlaying && score === 21) {
+          bus.$emit('playerBlackjack');
         }
       });
     },
@@ -93,6 +95,16 @@ export default {
     stand() {
       this.isPlaying = false;
       bus.$emit('playerStand', this.$refs.hand.score);
+    },
+    // Double
+    double() {
+      this.$refs.playerWallet.betValue(this.lastBet);
+      this.isPlaying = false;
+      setTimeout(() => {
+        bus.$emit('playerHit');
+        setTimeout(() => bus.$emit('playerStand', this.$refs.hand.score),
+          this.$store.state.delays.betweenTurns);
+      }, this.$store.state.delays.dealCardWait);
     },
     // End of a turn, begining of a new one
     endOfTurn(result) {

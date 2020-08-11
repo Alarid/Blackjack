@@ -4,9 +4,7 @@
 
     <Dealer ref="dealer"
       :showHandScore="showDealerHandScore"
-      :dealCardWait="dealCardWait"
       :playerHand="playerHand"
-      :betweenTurnsDelay="betweenTurnsDelay"
       @endTurn="endTurn" />
 
     <Player ref="player"/>
@@ -29,13 +27,14 @@ export default {
     bus.$on('playerBust', this.playerBust);
     bus.$on('playerBlackjack', this.playerBlackjack);
     bus.$on('playerBlackjackImmediate', this.playerBlackjackImmediate);
+
+    this.betweenTurnsDelay = this.$store.state.delays.betweenTurns;
   },
   data() {
     return {
       showDealerHandScore: false,
-      dealCardWait: 500,
-      betweenTurnsDelay: 1500,
       playerHand: 0,
+      betweenTurnsDelay: null,
     };
   },
   methods: {
@@ -80,7 +79,7 @@ export default {
         this.$refs.dealer.revealHiddenCard();
         this.playerHand = this.$refs.player.handScore;
         setTimeout(callback, this.betweenTurnsDelay);
-      }, this.dealCardWait);
+      }, this.$store.state.delays.dealCardWait);
     },
     // End the turn
     endTurn() {
@@ -94,7 +93,7 @@ export default {
         this.$refs.toast.create('Dealer Wins !', 'top-center', 'danger', this.betweenTurnsDelay);
       } else if (dealerScore === this.playerHand) {
         result = gameScore.PUSH;
-        this.$refs.toast.create('Push', 'center-center', 'warning', this.betweenTurnsDelay);
+        this.$refs.toast.create('Push', 'top-center', 'warning', this.betweenTurnsDelay);
       } else {
         console.error(`Couldn't dertermine the issue of the game ${dealerScore}/${this.playerHand}`);
       }

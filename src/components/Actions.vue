@@ -12,6 +12,16 @@
       <b-button
         variant="success"
         size="lg"
+        class="rounded-circle action-btn double-btn"
+        v-if="!hasHit"
+        :style="doubleStyle"
+        @click="double">
+        X 2 Double
+      </b-button>
+
+      <b-button
+        variant="success"
+        size="lg"
         class="px-5 py-3 stand-btn action-btn"
         @click="stand">
         <b-icon-hand-thumbs-up/> Stand
@@ -25,20 +35,45 @@ import { bus } from '@/main';
 
 export default {
   name: 'Actions',
+  data() {
+    return {
+      hasHit: false,
+      nbTokens: 1,
+    };
+  },
+  created() {
+    bus.$on('nbTokensInBet', (nb) => { this.nbTokens = nb; });
+  },
+  computed: {
+    doubleStyle() {
+      return {
+        transform: `translate(-100%,-50%) translateX(-${5 * this.nbTokens}px)`,
+      };
+    },
+  },
   methods: {
     // Hit : ask for another card
     hit() {
+      this.hasHit = true;
       bus.$emit('playerHit');
     },
     // Stand : end of player's turn
     stand() {
       this.$emit('stand');
     },
+    // Double : x 2 on the bet, get another card and end the turn
+    double() {
+      this.hasHit = true;
+      this.$emit('double');
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+@import '@/scss/vars';
+$double-btn-radius: calc(#{$token-width} - 2 * #{$token-border-width});
+
 .actions {
   position: absolute;
   top: 50%;
@@ -50,6 +85,13 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
+
+    &.double-btn {
+      z-index: 2000;
+      width: $double-btn-radius;
+      height: $double-btn-radius;
+      // transform: translate(-100%,-50%) translateX(-#{$token-border-width});
+    }
 
     &.hit-btn {
       transform: translate(-50%,-50%) translateX(-250px);

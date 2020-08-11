@@ -25,17 +25,21 @@ export default {
   data() {
     return {
       cards: [],
+      isPlaying: false,
+      betweenTurnsDelay: null,
+      dealCardWait: null,
     };
   },
   props: {
     showHandScore: { type: Boolean, required: true },
-    dealCardWait: { type: Number, required: true },
     playerHand: { type: Number, required: true },
-    betweenTurnsDelay: { type: Number, required: true },
   },
   created() {
     bus.$on('playerHit', this.dealCardToPlayer);
     bus.$on('endOfTurn', this.clearHand);
+
+    this.betweenTurnsDelay = this.$store.state.delays.betweenTurns;
+    this.dealCardWait = this.$store.state.delays.dealCardWait;
   },
   computed: {
     handScore() {
@@ -53,6 +57,7 @@ export default {
   methods: {
     // Deal cards to player and self
     dealCards() {
+      this.isPlaying = false;
       return new Promise((next) => this.dealCardToPlayer(next))
         // eslint-disable-next-line max-len
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
@@ -80,7 +85,7 @@ export default {
       // Bust
       if (this.handScore > 21) {
         this.$refs.toast.create('BUST', 'top-center', 'danger', 1000);
-      } else if (this.handScore === 21) {
+      } else if (this.handScore === 21 && this.isPlaying) {
         // BLACKJACK !
         this.$refs.toast.create('BLACKJACK !', 'top-center', 'danger', this.betweenTurnsDelay);
       }
@@ -91,6 +96,7 @@ export default {
     },
     // Player stand, dealer's turn to play
     play() {
+      this.isPlaying = true;
       if (this.shouldKeepPlaying) {
         this.dealCardToSelf();
         setTimeout(() => this.play(), this.betweenTurnsDelay);
