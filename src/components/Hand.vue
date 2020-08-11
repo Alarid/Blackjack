@@ -51,6 +51,9 @@ export default {
         transform: `translateX(-${this.offset}px)`,
       };
     },
+    isSoft17() {
+      return this.score === 17 && this.cards.filter((c) => c.value === 'ace').length === 1;
+    },
   },
   methods: {
     getCardValue(value) {
@@ -61,7 +64,7 @@ export default {
       const otherCardsTotal = this.cards
         .filter((c) => c.value !== 'ace')
         .reduce((total, c) => total + c.value, 0);
-      return otherCardsTotal >= 10 ? 1 : 11;
+      return otherCardsTotal > 10 ? 1 : 11;
     },
   },
   components: {

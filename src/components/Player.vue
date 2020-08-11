@@ -75,16 +75,19 @@ export default {
           this.isPlaying = false;
           this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
           bus.$emit('playerBust', score);
-        } else if (score === 21) {
-          this.isPlaying = false;
-          bus.$emit('playerBlackjack');
         }
       });
     },
     // Player's turn begin
     play() {
-      this.isPlaying = true;
       this.showHandScore = true;
+      // Blackjack from draw
+      if (this.$refs.hand.score === 21) {
+        bus.$emit('playerBlackjackImmediate');
+      } else {
+        // Starts playing
+        this.isPlaying = true;
+      }
     },
     // Stand
     stand() {
@@ -95,9 +98,8 @@ export default {
     endOfTurn(result) {
       if (result === gameScore.PLAYER_WINS) {
         // Player wins
-        console.log(`player wins ${this.$refs.bet.total * 2} $`);
         this.$refs.playerWallet.addCash(this.$refs.bet.total * 2);
-      } else if (result === gameScore.DRAW || result === gameScore.NO_WINNERS) {
+      } else if (result === gameScore.DRAW || result === gameScore.PUSH) {
         // Game is a draw or no winners
         this.$refs.playerWallet.addCash(this.lastBet);
       }

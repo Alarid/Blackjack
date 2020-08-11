@@ -29,6 +29,7 @@ export default {
     bus.$on('playerStand', this.playerStands);
     bus.$on('playerBust', this.playerBust);
     bus.$on('playerBlackjack', this.playerBlackjack);
+    bus.$on('playerBlackjackImmediate', this.playerBlackjackImmediate);
   },
   data() {
     return {
@@ -54,10 +55,25 @@ export default {
     playerBust() {
       this.endOfPlayerTurn(this.endTurn);
     },
-    // Player got lucky
+    // Player got exactly 21
     playerBlackjack() {
       this.$refs.toast.create('BLACKJACK !', 'bottom-center', 'success', this.betweenTurnsDelay);
       this.endOfPlayerTurn(this.endTurn);
+    },
+    // Player got blackjack after receiving his cards
+    playerBlackjackImmediate() {
+      // The dealer doesn't have an ace or a 10 visible : immediate win for the player
+      if (!this.$refs.dealer.hasAceOr10) {
+        this.$refs.toast.create('BLACKJACK !', 'bottom-center', 'success', this.betweenTurnsDelay);
+        setTimeout(() => {
+          this.$refs.toast.create('You Win !', 'bottom-center', 'success', this.betweenTurnsDelay);
+          setTimeout(() => this.resetBoard(gameScore.PLAYER_WINS), this.betweenTurnsDelay);
+        }, this.betweenTurnsDelay);
+      } else {
+        // If the dealer has an ace or a 10 visible in his hand ,
+        // the win isn't immediate for the player (normal blackjack)
+        this.playerBlackjack();
+      }
     },
     // End of player's turn, reveal the dealer's card and call the callback
     endOfPlayerTurn(callback) {
@@ -78,10 +94,10 @@ export default {
         result = gameScore.DEALER_WINS;
         this.$refs.toast.create('Dealer Wins !', 'top-center', 'danger', this.betweenTurnsDelay);
       } else if (dealerScore === this.playerHand) {
-        result = gameScore.DRAW;
-        this.$refs.toast.create('Game is a draw', 'center-center', 'warning', this.betweenTurnsDelay);
+        result = gameScore.PUSH;
+        this.$refs.toast.create('Push', 'center-center', 'warning', this.betweenTurnsDelay);
       } else {
-        result = gameScore.NO_WINNERS;
+        console.error(`Couldn't dertermine the issue of the game ${dealerScore}/${this.playerHand}`);
       }
       setTimeout(() => this.resetBoard(result), this.betweenTurnsDelay);
     },

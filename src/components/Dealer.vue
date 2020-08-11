@@ -41,6 +41,14 @@ export default {
     handScore() {
       return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
     },
+    shouldKeepPlaying() {
+      return (this.handScore <= 16 && this.handScore < this.playerHand)
+        || this.$refs.hand.isSoft17;
+    },
+    hasAceOr10() {
+      const visibleCard = this.cards.filter((c) => !c.hidden).pop();
+      return visibleCard.value === 'ace' || visibleCard.value === 10;
+    },
   },
   methods: {
     // Deal cards to player and self
@@ -72,6 +80,9 @@ export default {
       // Bust
       if (this.handScore > 21) {
         this.$refs.toast.create('BUST', 'top-center', 'danger', 1000);
+      } else if (this.handScore === 21) {
+        // BLACKJACK !
+        this.$refs.toast.create('BLACKJACK !', 'top-center', 'danger', this.betweenTurnsDelay);
       }
 
       if (next) {
@@ -80,7 +91,7 @@ export default {
     },
     // Player stand, dealer's turn to play
     play() {
-      if (this.handScore <= 16 && this.handScore < this.playerHand) {
+      if (this.shouldKeepPlaying) {
         this.dealCardToSelf();
         setTimeout(() => this.play(), this.betweenTurnsDelay);
       } else {
