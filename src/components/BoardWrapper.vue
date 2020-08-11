@@ -16,8 +16,7 @@ export default {
 
 <style scoped lang="scss">
 .board-wrapper {
-  margin-top: 10vh;
-  height: 80vh;
+  height: 100vh;
   border: 2px solid rgba(0,0,0,1);
   padding: 5px;
 

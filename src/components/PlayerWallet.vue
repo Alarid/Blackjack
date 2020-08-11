@@ -1,5 +1,5 @@
 <template>
-  <div class="wallet w-50">
+  <div class="wallet">
     <div class="wallet-header d-inline-block">
       <p>Bank: <strong>{{ money }} $</strong></p>
 
@@ -120,6 +120,7 @@ export default {
   position: absolute;
   bottom: 0;
   left: 15px;
+  width: calc(6 * #{$token-width});
 
   .wallet-header {
     background-color: #11354F;

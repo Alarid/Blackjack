@@ -1,5 +1,6 @@
 <template>
   <div class="deck">
+    <Toast ref="toast"/>
     <img alt="deck icon" src="../assets/deck.png">
     <span class="font-weight-bold">{{cards.length}}</span>
   </div>
@@ -7,6 +8,7 @@
 
 <script>
 import shuffle from 'shuffle-array';
+import Toast from '@/components/Toast.vue';
 
 export default {
   name: 'Deck',
@@ -34,6 +36,7 @@ export default {
   },
   methods: {
     shuffleDeck() {
+      this.$refs.toast.create('Shuffling', 'top-right', 'info', 2000);
       this.cards = this.base.slice();
       shuffle(this.cards);
       this.drawedCard = null;
@@ -46,6 +49,9 @@ export default {
       this.drawedCard.hidden = false;
       return this.drawedCard;
     },
+  },
+  components: {
+    Toast,
   },
 };
 </script>
