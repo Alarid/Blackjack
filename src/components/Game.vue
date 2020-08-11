@@ -84,25 +84,24 @@ export default {
     // End the turn
     endTurn() {
       const dealerScore = this.$refs.dealer.handScore;
-      let result;
       if (dealerScore > 21 || (dealerScore < this.playerHand && this.playerHand < 22)) {
-        result = gameScore.PLAYER_WINS;
+        this.$refs.player.win();
         this.$refs.toast.create('You Win !', 'bottom-center', 'success', this.betweenTurnsDelay);
       } else if ((dealerScore < 22 && dealerScore > this.playerHand) || this.playerHand > 21) {
-        result = gameScore.DEALER_WINS;
         this.$refs.toast.create('Dealer Wins !', 'top-center', 'danger', this.betweenTurnsDelay);
+        this.$refs.player.lose();
       } else if (dealerScore === this.playerHand) {
-        result = gameScore.PUSH;
         this.$refs.toast.create('Push', 'top-center', 'warning', this.betweenTurnsDelay);
+        this.$refs.player.push();
       } else {
         console.error(`Couldn't dertermine the issue of the game ${dealerScore}/${this.playerHand}`);
       }
-      setTimeout(() => this.resetBoard(result), this.betweenTurnsDelay);
+      setTimeout(() => this.resetBoard(), this.betweenTurnsDelay);
     },
     // Reset the board for the next turn
-    resetBoard(result) {
+    resetBoard() {
       this.showDealerHandScore = false;
-      bus.$emit('endOfTurn', result);
+      bus.$emit('endOfTurn');
     },
   },
   components: {

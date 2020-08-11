@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     delays: {
-      betweenTurns: 1500,
+      betweenTurns: 2000,
       dealCardWait: 500,
     },
   },

@@ -46,7 +46,7 @@ export default {
       return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
     },
     shouldKeepPlaying() {
-      return (this.handScore <= 16 && this.handScore < this.playerHand)
+      return (this.handScore <= 16 && this.handScore <= this.playerHand)
         || this.$refs.hand.isSoft17;
     },
     hasAceOr10() {
@@ -87,7 +87,7 @@ export default {
         this.$refs.toast.create('BUST', 'top-center', 'danger', 1000);
       } else if (this.handScore === 21 && this.isPlaying) {
         // BLACKJACK !
-        this.$refs.toast.create('BLACKJACK !', 'top-center', 'danger', this.betweenTurnsDelay);
+        this.blackjack();
       }
 
       if (next) {
@@ -109,10 +109,17 @@ export default {
       // eslint-disable-next-line no-param-reassign
       this.cards = this.cards.map((card) => { card.hidden = false; return card; });
       this.$refs.hand.$forceUpdate();
+      if (this.handScore === 21) {
+        this.blackjack();
+      }
     },
     // Remove cards from the hand
     clearHand() {
       this.cards = [];
+    },
+    // Blackjack popup
+    blackjack() {
+      this.$refs.toast.create('BLACKJACK !', 'top-center', 'danger', this.betweenTurnsDelay);
     },
   },
   components: {

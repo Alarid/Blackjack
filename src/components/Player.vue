@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <Cashout v-if="isPlaying"/>
+    <Cashout v-if="isBetting"/>
 
     <Toast ref="toast" />
 
@@ -27,7 +27,6 @@
 
 <script>
 import { bus } from '@/main';
-import gameScore from '@/utils/gameScore';
 
 import PlayerWallet from '@/components/PlayerWallet.vue';
 import Bet from '@/components/Bet.vue';
@@ -109,21 +108,29 @@ export default {
           this.$store.state.delays.betweenTurns);
       }, this.$store.state.delays.dealCardWait);
     },
-    // End of a turn, begining of a new one
-    endOfTurn(result) {
-      if (result === gameScore.PLAYER_WINS) {
-        // Player wins
-        this.$refs.playerWallet.addCash(this.$refs.bet.total * 2);
-      } else if (result === gameScore.PUSH) {
-        // Game is a draw or no winners
-        this.$refs.playerWallet.addCash(this.lastBet);
-      } else if (this.$refs.playerWallet.money === 0) {
+    // Win the round
+    win() {
+      this.$refs.playerWallet.addCash(this.$refs.bet.total * 2);
+      bus.$emit('clearBet', true);
+    },
+    // Round ended in push
+    push() {
+      this.$refs.playerWallet.addCash(this.lastBet);
+      bus.$emit('clearBet', true);
+    },
+    // Lose the round
+    lose() {
+      bus.$emit('clearBet', true);
+      if (this.$refs.playerWallet.money === 0) {
         // Game over
         console.log('game over');
         bus.$emit('gameOver');
-        return;
+        this.cards = [];
+        this.showHandScore = false;
       }
-      bus.$emit('clearBet', true);
+    },
+    // End of a turn, begining of a new one
+    endOfTurn() {
       this.cards = [];
       this.isBetting = true;
       this.showHandScore = false;
