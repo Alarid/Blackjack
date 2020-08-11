@@ -1,12 +1,14 @@
 <template>
   <div class="player">
+    <Cashout v-if="isPlaying"/>
+
     <Toast ref="toast" />
 
     <Bet ref="bet"
       :playerIsBetting="isBetting" />
 
     <Actions ref="actions"
-      v-if="isPlaying"
+      v-show="isPlaying"
       @stand="stand"
       @double="double"/>
 
@@ -32,6 +34,7 @@ import Bet from '@/components/Bet.vue';
 import Hand from '@/components/Hand.vue';
 import Actions from '@/components/Actions.vue';
 import Toast from '@/components/Toast.vue';
+import Cashout from '@/components/Cashout.vue';
 
 export default {
   name: 'Player',
@@ -111,9 +114,14 @@ export default {
       if (result === gameScore.PLAYER_WINS) {
         // Player wins
         this.$refs.playerWallet.addCash(this.$refs.bet.total * 2);
-      } else if (result === gameScore.DRAW || result === gameScore.PUSH) {
+      } else if (result === gameScore.PUSH) {
         // Game is a draw or no winners
         this.$refs.playerWallet.addCash(this.lastBet);
+      } else if (this.$refs.playerWallet.money === 0) {
+        // Game over
+        console.log('game over');
+        bus.$emit('gameOver');
+        return;
       }
       bus.$emit('clearBet', true);
       this.cards = [];
@@ -128,6 +136,7 @@ export default {
     Hand,
     Actions,
     Toast,
+    Cashout,
   },
 };
 </script>

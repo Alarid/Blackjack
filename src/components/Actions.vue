@@ -47,7 +47,7 @@ export default {
   computed: {
     doubleStyle() {
       return {
-        transform: `translate(-100%,-50%) translateX(-${5 * this.nbTokens}px)`,
+        transform: `translate(-100%,-50%) translateX(-${5 + 2 * this.nbTokens - 2}px)`,
       };
     },
   },
