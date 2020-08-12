@@ -1,4 +1,9 @@
-# blackjack
+# Blackjack
+Full VueJS Blackjack game. Play against the dealer and practice your Blackjack skills !
+
+View project live here: https://alarid.github.io/Blackjack
+
+![game](./src/assets/screenshots/game1.png)
 
 ## Project setup
 ```
