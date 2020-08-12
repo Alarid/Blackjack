@@ -123,7 +123,6 @@ export default {
       bus.$emit('clearBet', true);
       if (this.$refs.playerWallet.money === 0) {
         // Game over
-        console.log('game over');
         bus.$emit('gameOver');
         this.cards = [];
         this.showHandScore = false;

@@ -7,6 +7,16 @@
       @endTurn="endTurn" />
 
     <Player ref="player"/>
+
+    <b-modal id="gameoverModal"
+      title="Game Over"
+      size="sm"
+      ok-title="Continue"
+      ok-variant="success"
+      ok-only
+      @ok="quitGame">
+      <p class="my-4">You ran out of money</p>
+    </b-modal>
   </div>
 </template>
 
@@ -25,6 +35,7 @@ export default {
     bus.$on('playerBust', this.playerBust);
     bus.$on('playerBlackjack', this.playerBlackjack);
     bus.$on('playerBlackjackImmediate', this.playerBlackjackImmediate);
+    bus.$on('gameOver', this.gameOver);
 
     this.betweenTurnsDelay = this.$store.state.delays.betweenTurns;
   },
@@ -96,6 +107,14 @@ export default {
         console.error(`Couldn't dertermine the issue of the game ${dealerScore}/${this.playerHand}`);
       }
       setTimeout(() => bus.$emit('endOfTurn'), this.betweenTurnsDelay);
+    },
+    // Game over
+    gameOver() {
+      setTimeout(() => this.$bvModal.show('gameoverModal'), this.betweenTurnsDelay);
+    },
+    // Quit the game and return to the home page
+    quitGame() {
+      this.$router.push('/');
     },
   },
   components: {
