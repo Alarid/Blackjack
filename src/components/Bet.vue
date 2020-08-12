@@ -9,7 +9,7 @@
           :value="token.value"
           @click.native="remove(idx, token.value)"
           :class="tokenClass(idx)"
-          :style="{ transform: `translateY(-50%) translateX(-100%) translateX(-${idx * 2}px)` }"/>
+          :style="tokenStyle(idx)"/>
       <!-- </transition-group> -->
 
       <div class="total"> {{total}} $</div>
@@ -64,6 +64,13 @@ export default {
       return {
         'stackable-token': true,
         'no-shadow': idx > 0,
+      };
+    },
+    // Get the translate property for the token, depending on its index
+    tokenStyle(idx) {
+      const translateFactor = (idx * 2) > 10 ? 10 : idx * 2;
+      return {
+        transform: `translateY(-50%) translateX(-100%) translateX(-${translateFactor}px)`,
       };
     },
     // Add a token to the bet

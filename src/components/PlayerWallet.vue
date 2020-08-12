@@ -71,7 +71,7 @@ export default {
       gsap.to(this.$data, { duration: 0.5, renderMoney: newValue });
     },
   },
-  created() {
+  mounted() {
     bus.$on('tokenRemoved', this.refundToken);
     this.betValue(this.initialBet);
   },
@@ -102,7 +102,8 @@ export default {
     // Bet tokens to reach desired value
     betValue(value) {
       let remaining = value;
-      this.availableTokens.slice().sort((t1, t2) => t2.value > t1.value).forEach((token) => {
+      const test = this.availableTokens.slice().sort((t1, t2) => t2.value - t1.value);
+      test.forEach((token) => {
         while (token.value <= remaining) {
           this.betToken(token.value);
           remaining -= token.value;
