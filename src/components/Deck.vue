@@ -27,12 +27,10 @@ export default {
   props: {
     nbDecks: { type: Number, default: 2 },
   },
-  created() {
-    this.$store.dispatch('cards/fillDeck').then(() => {
-      const { deck } = this.$store.state.cards;
-      this.base = new Array(this.nbDecks).fill(deck).flat();
-      this.shuffleDeck();
-    });
+  mounted() {
+    const { deck } = this.$store.state.cards;
+    this.base = new Array(this.nbDecks).fill(deck).flat();
+    this.shuffleDeck();
   },
   methods: {
     shuffleDeck() {

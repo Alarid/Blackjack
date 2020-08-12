@@ -19,4 +19,13 @@ new Vue({
   router,
   store,
   render: (h) => h(App),
+  created() {
+    // Fetch deck and preload card images
+    this.$store.dispatch('cards/fillDeck').then(() => {
+      this.$store.state.cards.deck.forEach((card) => {
+        const img = new Image();
+        img.src = `./src/assets/cards/${card.image}`;
+      });
+    });
+  },
 }).$mount('#app');
