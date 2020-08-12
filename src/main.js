@@ -27,6 +27,9 @@ new Vue({
         const img = new Image();
         img.src = `images/cards/${card.image}`;
       });
+      // Preload back card image too
+      const img = new Image();
+      img.src = 'images/cards/back.png';
     });
   },
 }).$mount('#app');
