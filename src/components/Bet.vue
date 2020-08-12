@@ -48,7 +48,6 @@ export default {
   },
   created() {
     bus.$on('tokenBet', (val) => this.add(this.$store.getters['tokens/token'](val)));
-    bus.$on('clearBet', this.clearBet);
   },
   computed: {
     animatedTotal() {
@@ -92,8 +91,8 @@ export default {
       }
     },
     // Clear the bet, refunding tokens to the player or not
-    clearBet(noRefund = false) {
-      if (!noRefund) {
+    clearBet(refund) {
+      if (refund) {
         this.tokens.forEach((token) => bus.$emit('tokenRemoved', token.value));
       }
       this.tokens = [];

@@ -21,7 +21,6 @@ new Vue({
   render: (h) => h(App),
   created() {
     // Fetch deck and preload card images
-    console.log(process.env.BASE_URL);
     this.$store.dispatch('cards/fillDeck').then(() => {
       this.$store.state.cards.deck.forEach((card) => {
         const img = new Image();

@@ -21,8 +21,7 @@ export default {
   name: 'Cashout',
   methods: {
     cashout() {
-      // TODO
-      this.$router.push('/');
+      this.$emit('cashout');
     },
   },
 };

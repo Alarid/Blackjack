@@ -112,7 +112,7 @@ export default {
     },
     // Clear the bet
     clearBet() {
-      bus.$emit('clearBet');
+      this.$emit('clearBet');
     },
     // Add money to the wallet
     addCash(cash) {

@@ -1,6 +1,8 @@
 <template>
   <div class="player">
-    <Cashout v-if="isBetting"/>
+    <Cashout
+      v-if="isBetting"
+      @cashout="cashout"/>
 
     <Toast ref="toast" />
 
@@ -15,7 +17,8 @@
     <PlayerWallet ref="playerWallet"
       :initialCash="initialCash"
       :playerIsBetting="isBetting"
-      :initialBet="lastBet" />
+      :initialBet="lastBet"
+      @clearBet="clearBet"/>
 
     <Hand ref="hand"
       class="player-cards"
@@ -65,6 +68,10 @@ export default {
       this.isBetting = false;
       this.lastBet = this.$refs.bet.total;
     },
+    // Clear tokens in bet
+    clearBet(refund = true) {
+      this.$refs.bet.clearBet(refund);
+    },
     // Receive card from dealer
     dealCard(c) {
       const card = c;
@@ -112,16 +119,16 @@ export default {
     // Win the round
     win() {
       this.$refs.playerWallet.addCash(this.$refs.bet.total * 2);
-      bus.$emit('clearBet', true);
+      this.clearBet(false);
     },
     // Round ended in push
     push() {
-      this.$refs.playerWallet.addCash(this.lastBet);
-      bus.$emit('clearBet', true);
+      // this.$refs.playerWallet.addCash(this.lastBet);
+      this.clearBet();
     },
     // Lose the round
     lose() {
-      bus.$emit('clearBet', true);
+      this.clearBet(false);
       if (this.$refs.playerWallet.money === 0) {
         // Game over
         bus.$emit('gameOver');
@@ -135,6 +142,10 @@ export default {
       this.isBetting = true;
       this.showHandScore = false;
       this.$refs.playerWallet.betValue(this.lastBet);
+    },
+    // Player wants to cash out
+    cashout() {
+
     },
   },
   components: {
