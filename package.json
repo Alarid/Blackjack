@@ -13,6 +13,7 @@
     "bootstrap": "^4.5.1",
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.6.5",
+    "gsap": "^3.4.2",
     "promise": "^8.1.0",
     "shuffle-array": "^1.0.1",
     "vue": "^2.6.11",

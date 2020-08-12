@@ -1,7 +1,7 @@
 <template>
   <div class="wallet">
     <div class="wallet-header d-inline-block">
-      <p>Bank: <strong>{{ money }} $</strong></p>
+      <p>Bank: <strong>{{ animatedMoney }} $</strong></p>
 
       <b-button
         variant="info"
@@ -31,6 +31,7 @@
 
 <script>
 import { bus } from '@/main';
+import gsap from 'gsap';
 
 import Token from '@/components/Token.vue';
 
@@ -39,6 +40,7 @@ export default {
   data() {
     return {
       money: this.initialCash,
+      renderMoney: this.initialCash,
     };
   },
   props: {
@@ -47,6 +49,9 @@ export default {
     initialBet: { type: Number, required: true },
   },
   computed: {
+    animatedMoney() {
+      return this.renderMoney.toFixed(0);
+    },
     tokens() {
       return this.$store.getters['tokens/all'];
     },
@@ -58,6 +63,12 @@ export default {
     },
     showClearBet() {
       return this.playerIsBetting && this.money === 0;
+    },
+  },
+  watch: {
+    // eslint-disable-next-line func-names, object-shorthand
+    money: function (newValue) {
+      gsap.to(this.$data, { duration: 0.5, renderMoney: newValue });
     },
   },
   created() {
