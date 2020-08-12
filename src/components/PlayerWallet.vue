@@ -93,7 +93,7 @@ export default {
     },
     // All in !!
     allIn() {
-      this.tokens.slice().sort((t1, t2) => t2.value > t1.value).forEach((token) => {
+      this.tokens.slice().sort((t1, t2) => t2.value - t1.value).forEach((token) => {
         while (this.availableTokens.filter((t) => t.value === token.value).length > 0) {
           this.betToken(token.value);
         }
