@@ -28,10 +28,10 @@ export default {
       isPlaying: false,
       betweenTurnsDelay: null,
       dealCardWait: null,
+      showHandScore: false,
     };
   },
   props: {
-    showHandScore: { type: Boolean, required: true },
     playerHand: { type: Number, required: true },
   },
   created() {
@@ -64,7 +64,8 @@ export default {
         // eslint-disable-next-line max-len
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToPlayer(next), this.dealCardWait)))
         // eslint-disable-next-line max-len
-        .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)));
+        .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
+        .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
     },
     // Deal a card to the player
     dealCardToPlayer(next) {
@@ -116,6 +117,7 @@ export default {
     // Remove cards from the hand
     clearHand() {
       this.cards = [];
+      this.showHandScore = false;
     },
     // Blackjack popup
     blackjack() {

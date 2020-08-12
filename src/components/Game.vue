@@ -3,7 +3,6 @@
     <Toast ref="toast" />
 
     <Dealer ref="dealer"
-      :showHandScore="showDealerHandScore"
       :playerHand="playerHand"
       @endTurn="endTurn" />
 
@@ -12,7 +11,6 @@
 </template>
 
 <script>
-import gameScore from '@/utils/gameScore';
 import { bus } from '@/main';
 
 import Dealer from '@/components/Dealer.vue';
@@ -30,9 +28,11 @@ export default {
 
     this.betweenTurnsDelay = this.$store.state.delays.betweenTurns;
   },
+  beforeDestroy() {
+    bus.$off();
+  },
   data() {
     return {
-      showDealerHandScore: false,
       playerHand: 0,
       betweenTurnsDelay: null,
     };
@@ -41,7 +41,6 @@ export default {
     // Begining of the turn
     beginTurn() {
       this.$refs.dealer.dealCards().then(() => {
-        this.showDealerHandScore = true;
         this.$refs.player.play();
       });
     },
@@ -65,7 +64,7 @@ export default {
         this.$refs.toast.create('BLACKJACK !', 'bottom-center', 'success', this.betweenTurnsDelay);
         setTimeout(() => {
           this.$refs.toast.create('You Win !', 'bottom-center', 'success', this.betweenTurnsDelay);
-          setTimeout(() => this.resetBoard(gameScore.PLAYER_WINS), this.betweenTurnsDelay);
+          setTimeout(() => bus.$emit('endOfTurn'), this.betweenTurnsDelay);
         }, this.betweenTurnsDelay);
       } else {
         // If the dealer has an ace or a 10 visible in his hand ,
@@ -96,12 +95,7 @@ export default {
       } else {
         console.error(`Couldn't dertermine the issue of the game ${dealerScore}/${this.playerHand}`);
       }
-      setTimeout(() => this.resetBoard(), this.betweenTurnsDelay);
-    },
-    // Reset the board for the next turn
-    resetBoard() {
-      this.showDealerHandScore = false;
-      bus.$emit('endOfTurn');
+      setTimeout(() => bus.$emit('endOfTurn'), this.betweenTurnsDelay);
     },
   },
   components: {

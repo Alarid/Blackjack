@@ -1,8 +1,18 @@
 <template>
   <div class="cashout">
-    <a href="#" class="text-success" @click="cashout">
+    <a href="#" class="text-success" v-b-modal.confirmCashout>
       $ Cashout
     </a>
+
+    <b-modal id="confirmCashout"
+      title="Cashout"
+      size="sm"
+      ok-title="Yes"
+      ok-variant="success"
+      cancel-title="No"
+      @ok="cashout">
+      <p class="my-4">Take cash and leave ?</p>
+    </b-modal>
   </div>
 </template>
 
@@ -11,7 +21,8 @@ export default {
   name: 'Cashout',
   methods: {
     cashout() {
-      console.log('cashout');
+      // TODO
+      this.$router.push('/');
     },
   },
 };

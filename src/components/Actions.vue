@@ -43,6 +43,7 @@ export default {
   },
   created() {
     bus.$on('nbTokensInBet', (nb) => { this.nbTokens = nb; });
+    bus.$on('endOfTurn', this.endOfTurn);
   },
   computed: {
     doubleStyle() {
@@ -65,6 +66,10 @@ export default {
     double() {
       this.hasHit = true;
       this.$emit('double');
+    },
+    // End of a turn
+    endOfTurn() {
+      this.hasHit = false;
     },
   },
 };
