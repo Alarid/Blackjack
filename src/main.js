@@ -19,16 +19,24 @@ new Vue({
   router,
   store,
   render: (h) => h(App),
-  created() {
-    // Fetch deck and preload card images
-    this.$store.dispatch('cards/fillDeck').then(() => {
-      this.$store.state.cards.deck.forEach((card) => {
-        const img = new Image();
-        img.src = `images/cards/${card.image}`;
-      });
-      // Preload back card image too
-      const img = new Image();
-      img.src = 'images/cards/back.png';
+  beforeCreate() {
+    // Initialise store
+    this.$store.commit('initialiseStore');
+
+    // Subscribe to store updates
+    this.$store.subscribe((mutation, state) => {
+      // Store the state object as a JSON string
+      console.log('saving store in localstorage');
+      localStorage.setItem('store', JSON.stringify(state));
     });
+
+    // Fetch deck and preload card images
+    this.$store.state.deck.forEach((card) => {
+      const img = new Image();
+      img.src = `images/cards/${card.image}`;
+    });
+    // Preload back card image too
+    const img = new Image();
+    img.src = 'images/cards/back.png';
   },
 }).$mount('#app');

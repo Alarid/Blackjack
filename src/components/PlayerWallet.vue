@@ -73,7 +73,7 @@ export default {
   },
   mounted() {
     bus.$on('tokenRemoved', this.refundToken);
-    this.betValue(this.initialBet);
+    setTimeout(() => this.betValue(this.initialBet), this.$store.state.delays.dealCard);
   },
   methods: {
     // A token is visible only if its value is contained in the remaining money

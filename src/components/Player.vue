@@ -56,6 +56,9 @@ export default {
     handScore() {
       return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
     },
+    money() {
+      return this.$refs.playerWallet.money;
+    },
   },
   created() {
     bus.$on('betDone', this.betDone);
@@ -77,18 +80,14 @@ export default {
       const card = c;
       card.hidden = false;
       this.cards.push(card);
-      this.$nextTick(() => {
-        // eslint-disable-next-line prefer-destructuring
-        const score = this.$refs.hand.score;
-        if (score > 21) {
-          this.isPlaying = false;
-          this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
-          bus.$emit('playerBust', score);
-        } else if (this.isPlaying && score === 21) {
-          this.isPlaying = false;
-          bus.$emit('playerBlackjack');
-        }
-      });
+      if (this.handScore > 21) {
+        this.isPlaying = false;
+        this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
+        bus.$emit('playerBust', this.handScore);
+      } else if (this.isPlaying && this.handScore === 21) {
+        this.isPlaying = false;
+        bus.$emit('playerBlackjack');
+      }
     },
     // Player's turn begin
     play() {
@@ -113,7 +112,7 @@ export default {
       setTimeout(() => {
         bus.$emit('playerHit');
         setTimeout(() => bus.$emit('playerStand', this.$refs.hand.score),
-          this.$store.state.delays.betweenTurns);
+          this.$store.state.delays.dealCardWait);
       }, this.$store.state.delays.dealCardWait);
     },
     // Win the round
@@ -129,7 +128,7 @@ export default {
     // Lose the round
     lose() {
       this.clearBet(false);
-      if (this.$refs.playerWallet.money === 0) {
+      if (this.money === 0) {
         // Game over
         bus.$emit('gameOver');
         this.cards = [];
@@ -141,11 +140,14 @@ export default {
       this.cards = [];
       this.isBetting = true;
       this.showHandScore = false;
-      this.$refs.playerWallet.betValue(this.lastBet);
+      setTimeout(() => this.$refs.playerWallet.betValue(this.lastBet),
+        this.$store.state.delays.dealCard);
     },
     // Player wants to cash out
     cashout() {
-
+      this.clearBet();
+      this.$store.commit('saveHighscore', this.money);
+      this.$router.push('/');
     },
   },
   components: {

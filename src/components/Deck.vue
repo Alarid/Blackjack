@@ -28,7 +28,7 @@ export default {
     nbDecks: { type: Number, default: 2 },
   },
   mounted() {
-    const { deck } = this.$store.state.cards;
+    const { deck } = this.$store.state;
     this.base = new Array(this.nbDecks).fill(deck).flat();
     this.shuffleDeck();
   },

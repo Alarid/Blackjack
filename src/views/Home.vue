@@ -14,6 +14,9 @@ import BoardWrapper from '@/components/BoardWrapper.vue';
 
 export default {
   name: 'Home',
+  mounted() {
+    console.log(`Highscore = ${this.$store.state.save.highscore}`);
+  },
   methods: {
     launchGame() {
       this.$router.push({ name: 'Game' });
