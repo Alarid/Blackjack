@@ -22,7 +22,8 @@ export default {
   computed: {
     src() {
       // eslint-disable-next-line import/no-dynamic-require, global-require
-      return require(`../assets/cards/${this.hidden ? 'back.png' : this.filename}`);
+      // return require(`../assets/cards/${this.hidden ? 'back.png' : this.filename}`);
+      return `images/cards/${this.hidden ? 'back.png' : this.filename}`;
     },
     xOffset() {
       return this.idxInHand * this.offset;
