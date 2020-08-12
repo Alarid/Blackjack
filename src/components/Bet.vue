@@ -12,7 +12,7 @@
           :style="tokenStyle(idx)"/>
       <!-- </transition-group> -->
 
-      <div class="total"> {{total}} $</div>
+      <div class="total"> {{animatedTotal}} $</div>
 
       <b-button
         variant="info"
@@ -29,6 +29,7 @@
 
 <script>
 import { bus } from '@/main';
+import gsap from 'gsap';
 
 import Token from '@/components/Token.vue';
 
@@ -37,6 +38,8 @@ export default {
   data() {
     return {
       tokens: [],
+      total: 0,
+      totalRender: 0,
     };
   },
   props: {
@@ -48,14 +51,19 @@ export default {
     bus.$on('clearBet', this.clearBet);
   },
   computed: {
-    total() {
-      return this.tokens.reduce((total, token) => total + token.value, 0);
+    animatedTotal() {
+      return this.totalRender.toFixed(0);
     },
   },
   watch: {
     // eslint-disable-next-line object-shorthand, func-names
     tokens: function () {
       bus.$emit('nbTokensInBet', this.tokens.length);
+      this.total = this.tokens.reduce((total, token) => total + token.value, 0);
+    },
+    // eslint-disable-next-line object-shorthand, func-names
+    total: function (newValue) {
+      gsap.to(this.$data, { duration: 0.3, totalRender: newValue });
     },
   },
   methods: {

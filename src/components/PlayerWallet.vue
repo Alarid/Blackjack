@@ -68,7 +68,7 @@ export default {
   watch: {
     // eslint-disable-next-line func-names, object-shorthand
     money: function (newValue) {
-      gsap.to(this.$data, { duration: 0.5, renderMoney: newValue });
+      gsap.to(this.$data, { duration: 0.3, renderMoney: newValue });
     },
   },
   mounted() {
