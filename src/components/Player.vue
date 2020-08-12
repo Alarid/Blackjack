@@ -78,6 +78,7 @@ export default {
           this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
           bus.$emit('playerBust', score);
         } else if (this.isPlaying && score === 21) {
+          this.isPlaying = false;
           bus.$emit('playerBlackjack');
         }
       });

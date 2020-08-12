@@ -24,7 +24,8 @@ new Vue({
     this.$store.dispatch('cards/fillDeck').then(() => {
       this.$store.state.cards.deck.forEach((card) => {
         const img = new Image();
-        img.src = `./src/assets/cards/${card.image}`;
+        // eslint-disable-next-line import/no-dynamic-require, global-require
+        img.src = require(`@/assets/cards/${card.image}`);
       });
     });
   },

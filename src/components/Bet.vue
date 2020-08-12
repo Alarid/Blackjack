@@ -76,9 +76,8 @@ export default {
     },
     // Get the translate property for the token, depending on its index
     tokenStyle(idx) {
-      const translateFactor = (idx * 2) > 10 ? 10 : idx * 2;
       return {
-        transform: `translateY(-50%) translateX(-100%) translateX(-${translateFactor}px)`,
+        transform: `translateY(-50%) translateX(-100%) translateX(-${Math.min(idx * 2, 10)}px)`,
       };
     },
     // Add a token to the bet
