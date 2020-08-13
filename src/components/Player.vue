@@ -120,7 +120,6 @@ export default {
     },
     // Round ended in push
     push() {
-      // this.$refs.playerWallet.addCash(this.lastBet);
       this.clearBet();
     },
     // Lose the round
