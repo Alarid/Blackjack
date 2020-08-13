@@ -61,11 +61,17 @@ export default {
       if (value !== 'ace') {
         return parseInt(value); // eslint-disable-line radix
       }
-      // Computing the ace's
+
+      // Pair of aces = 12
+      if (this.cards.length === 2 && this.cards.filter((c) => c.value !== 'ace').length === 0) {
+        return 6;
+      }
+
+      // Computing the ace amoung other cards
       const otherCardsTotal = this.cards
         .filter((c) => c.value !== 'ace')
         .reduce((total, c) => total + c.value, 0);
-      return otherCardsTotal > 10 || otherCardsTotal === 0 ? 1 : 11;
+      return otherCardsTotal > 10 ? 1 : 11;
     },
   },
   components: {

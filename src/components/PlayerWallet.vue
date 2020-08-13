@@ -135,9 +135,9 @@ export default {
   width: calc(6 * #{$token-width});
 
   .wallet-header {
-    background-color: #11354F;
-    border-radius: 0.5rem 0.5rem 0 0;
-    border: 1px solid black;
+    background-color: $wallet-bg;
+    border-radius: $wallet-border-radius $wallet-border-radius 0 0;
+    border: $wallet-border;
     border-bottom: unset;
     padding: 15px;
     width: 30%;

@@ -74,6 +74,7 @@ export default {
       if (!this.$refs.dealer.hasAceOr10) {
         this.$refs.toast.create('BLACKJACK !', 'bottom-center', 'success', this.betweenTurnsDelay);
         setTimeout(() => {
+          this.$refs.player.win();
           this.$refs.toast.create('You Win !', 'bottom-center', 'success', this.betweenTurnsDelay);
           setTimeout(() => bus.$emit('endOfTurn'), this.betweenTurnsDelay);
         }, this.betweenTurnsDelay);

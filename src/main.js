@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import momentFilter from '@/filters/momentFilter';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -12,6 +13,8 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
+Vue.filter('momentFilter', momentFilter);
+
 // eslint-disable-next-line import/prefer-default-export
 export const bus = new Vue();
 
@@ -20,6 +23,7 @@ new Vue({
   store,
   render: (h) => h(App),
   beforeCreate() {
+    // localStorage.removeItem('store');
     // Initialise store
     this.$store.commit('initialiseStore');
 

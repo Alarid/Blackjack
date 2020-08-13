@@ -84,10 +84,10 @@ export default {
         this.isPlaying = false;
         this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
         bus.$emit('playerBust', this.handScore);
-      } else if (this.isPlaying && this.handScore === 21) {
+      } /** else if (this.isPlaying && this.handScore === 21) {
         this.isPlaying = false;
         bus.$emit('playerBlackjack');
-      }
+      } */
     },
     // Player's turn begin
     play() {

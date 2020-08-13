@@ -46,7 +46,7 @@ export default {
       return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
     },
     shouldKeepPlaying() {
-      return (this.handScore <= 16 && this.handScore <= this.playerHand)
+      return (this.handScore <= 16 /** && this.handScore <= this.playerHand */)
         || this.$refs.hand.isSoft17;
     },
     hasAceOr10() {
@@ -56,9 +56,23 @@ export default {
   },
   methods: {
     // Deal cards to player and self
+    // dealCards() {
+    //   this.isPlaying = false;
+    //   return new Promise((next) => this.dealCardToPlayer(next))
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToPlayer(next), this.dealCardWait)))
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
+    //     .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
+    // },
+    // Deal cards to player and self
     dealCards() {
+      const card1 = { value: 'ace', image: 'ace_of_spades.png' };
+      // const card2 = { value: 'ace', image: 'ace_of_clubs.png' };
       this.isPlaying = false;
-      return new Promise((next) => this.dealCardToPlayer(next))
+      return new Promise((next) => { bus.$emit('dealCard', card1); next(); })
         // eslint-disable-next-line max-len
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
         // eslint-disable-next-line max-len
@@ -86,10 +100,10 @@ export default {
       // Bust
       if (this.handScore > 21) {
         this.$refs.toast.create('BUST', 'top-center', 'danger', 1000);
-      } else if (this.handScore === 21 && this.isPlaying) {
+      } /** else if (this.handScore === 21 && this.isPlaying) {
         // BLACKJACK !
         this.blackjack();
-      }
+      } */
 
       if (next) {
         next();
@@ -110,9 +124,9 @@ export default {
       // eslint-disable-next-line no-param-reassign
       this.cards = this.cards.map((card) => { card.hidden = false; return card; });
       this.$refs.hand.$forceUpdate();
-      if (this.handScore === 21) {
+      /** if (this.handScore === 21) {
         this.blackjack();
-      }
+      } */
     },
     // Remove cards from the hand
     clearHand() {

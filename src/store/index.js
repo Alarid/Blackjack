@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -11,9 +12,8 @@ export default new Vuex.Store({
       betweenTurns: 2000,
       dealCardWait: 500,
     },
-    save: {
-      highscore: 0,
-    },
+    highscores: [],
+    nbHighscoresKept: 5,
     deck: [],
   },
   modules: {
@@ -45,9 +45,16 @@ export default new Vuex.Store({
     },
     // Save the highscore of the player
     saveHighscore(state, score) {
-      if (score > state.save.highscore) {
-        state.save.highscore = score;
+      // Get local copy of state highscores to add the new one
+      const scores = state.highscores.slice();
+      scores.push({ date: new Date(), score });
+      // Sort by highscore and keep only <nbHighscoresKept>
+      scores.sort((s1, s2) => parseInt(s2.score) - parseInt(s1.score));
+      if (scores.length > state.nbHighscoresKept) {
+        scores.pop();
       }
+      // Save the top X highscores
+      state.highscores = scores;
     },
   },
 });
