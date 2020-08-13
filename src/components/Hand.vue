@@ -69,18 +69,12 @@ export default {
     getCardValue(value) {
       // Not an ace, returning value
       if (value !== 'ace') {
-        if (this.owner === 'Player') {
-          console.log(`get card value ${value} = ${value}`);
-        }
         return parseInt(value); // eslint-disable-line radix
       }
 
       // Pair of aces = 12
       const nbAces = this.cards.filter((c) => c.value === 'ace').length;
       if (this.cards.length === 2 && nbAces === 2) {
-        if (this.owner === 'Player') {
-          console.log(`get card value ${value} = 6`);
-        }
         return 6;
       }
 
@@ -89,9 +83,6 @@ export default {
         .filter((c) => c.value !== 'ace')
         .reduce((total, c) => total + c.value, 0);
       const aceValue = (otherCardsTotal > 10 || this.cards.length > 2) ? 1 : 11;
-      if (this.owner === 'Player') {
-        console.log(`get card value ${value} = ${aceValue}`);
-      }
       return aceValue;
     },
     revealHiddenCard() {

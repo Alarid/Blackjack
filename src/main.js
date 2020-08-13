@@ -29,7 +29,6 @@ new Vue({
     // Subscribe to store updates
     this.$store.subscribe((mutation, state) => {
       // Store the state object as a JSON string
-      console.log('saving store in localstorage');
       localStorage.setItem('store', JSON.stringify(state));
     });
 

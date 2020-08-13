@@ -25,10 +25,8 @@ export default new Vuex.Store({
     initialiseStore(state) {
       const store = localStorage.getItem('store');
       if (store) {
-        console.log('Initializing store from local storage');
         this.replaceState(Object.assign(state, JSON.parse(localStorage.getItem('store'))));
       } else {
-        console.log('filling deck for the first time');
         const colors = ['clubs', 'diamonds', 'hearts', 'spades'];
         const heads = ['jack', 'queen', 'king', 'ace'];
         const cards = [];
