@@ -16,9 +16,6 @@
 <script>
 export default {
   name: 'Highscores',
-  mounted() {
-    console.log(this.highscores);
-  },
   computed: {
     highscores() {
       return this.$store.state.highscores;

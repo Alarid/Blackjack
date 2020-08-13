@@ -38,7 +38,7 @@ export default new Vuex.Store({
           cards.push([...Array(9)].fill(null)
             // eslint-disable-next-line no-plusplus
             .map(() => ({ value: start, image: `${start++}_of_${color}.png` }))
-            .concat(heads.map((head) => ({ value: (head === 'ace' ? 11 : 10), image: `${head}_of_${color}.png` }))));
+            .concat(heads.map((head) => ({ value: (head === 'ace' ? head : 10), image: `${head}_of_${color}.png` }))));
         });
         state.deck = cards.flat();
       }

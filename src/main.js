@@ -26,6 +26,7 @@ new Vue({
     // localStorage.removeItem('store');
     // Initialise store
     this.$store.commit('initialiseStore');
+    // console.log(JSON.stringify(this.$store.state.deck, null, 4));
 
     // Subscribe to store updates
     this.$store.subscribe((mutation, state) => {

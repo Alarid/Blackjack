@@ -6,7 +6,6 @@
 
     <Hand ref="hand"
       class="dealer-cards"
-      :cards="cards"
       :showScore="showHandScore"
       owner="Dealer" />
   </div>
@@ -24,7 +23,6 @@ export default {
   name: 'Dealer',
   data() {
     return {
-      cards: [],
       isPlaying: false,
       betweenTurnsDelay: null,
       dealCardWait: null,
@@ -43,15 +41,14 @@ export default {
   },
   computed: {
     handScore() {
-      return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
+      return this.$refs.hand.privateScore;
     },
     shouldKeepPlaying() {
       return (this.handScore <= 16 /** && this.handScore <= this.playerHand */)
         || this.$refs.hand.isSoft17;
     },
     hasAceOr10() {
-      const visibleCard = this.cards.filter((c) => !c.hidden).pop();
-      return visibleCard.value === 'ace' || visibleCard.value === 10;
+      return this.$refs.hand.hasAceOr10;
     },
   },
   methods: {
@@ -67,20 +64,6 @@ export default {
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
         .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
     },
-    // Deal cards to player and self
-    // dealCards() {
-    //   const card1 = { value: 'ace', image: 'ace_of_spades.png' };
-    //   // const card2 = { value: 'ace', image: 'ace_of_clubs.png' };
-    //   this.isPlaying = false;
-    //   return new Promise((next) => { bus.$emit('dealCard', card1); next(); })
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToPlayer(next), this.dealCardWait)))
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
-    //     .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
-    // },
     // Deal a card to the player
     dealCardToPlayer(next) {
       bus.$emit('dealCard', this.$refs.deck.drawCard());
@@ -91,11 +74,11 @@ export default {
     // Deal a card to self
     dealCardToSelf(next) {
       const card = this.$refs.deck.drawCard();
-      if (this.cards.length === 0) {
+      if (this.$refs.hand.cards.length === 0) {
         // First card is hidden
         card.hidden = true;
       }
-      this.cards.push(card);
+      this.$refs.hand.addCard(card);
 
       // Bust
       if (this.handScore > 21) {
@@ -121,16 +104,15 @@ export default {
     },
     // Reveal the hidden card in dealer's hand
     revealHiddenCard() {
-      // eslint-disable-next-line no-param-reassign
-      this.cards = this.cards.map((card) => { card.hidden = false; return card; });
-      this.$refs.hand.$forceUpdate();
+      this.$refs.hand.revealHiddenCard();
+      // this.$refs.hand.$forceUpdate();
       /** if (this.handScore === 21) {
         this.blackjack();
       } */
     },
     // Remove cards from the hand
     clearHand() {
-      this.cards = [];
+      this.$refs.hand.clear();
       this.showHandScore = false;
     },
     // Blackjack popup

@@ -27,20 +27,12 @@ export default {
   data() {
     return {
       cardsOffet: 20,
-      score: 0,
+      cards: [],
     };
   },
   props: {
-    cards: { type: Array, required: true },
     owner: { type: String, required: true },
     showScore: { type: Boolean, required: true },
-  },
-  watch: {
-    // eslint-disable-next-line object-shorthand, func-names
-    cards: function (newCards) {
-      const totalizer = (total, c) => total + this.getCardValue(c.value);
-      this.score = newCards.filter((c) => !c.hidden).reduce(totalizer, 0);
-    },
   },
   computed: {
     offset() {
@@ -54,16 +46,41 @@ export default {
     isSoft17() {
       return this.score === 17 && this.cards.filter((c) => c.value === 'ace').length === 1;
     },
+    score() {
+      const totalizer = (total, c) => total + this.getCardValue(c.value);
+      return this.cards.filter((c) => !c.hidden).reduce(totalizer, 0);
+    },
+    privateScore() {
+      return this.cards.reduce((total, c) => total + this.getCardValue(c.value), 0);
+    },
+    hasAceOr10() {
+      const visibleCard = this.cards.filter((c) => !c.hidden).pop();
+      return visibleCard.value === 'ace' || visibleCard.value === 10;
+    },
   },
   methods: {
+    addCard(card) {
+      this.cards.push(card);
+      this.$forceUpdate();
+    },
+    clear() {
+      this.cards = [];
+    },
     getCardValue(value) {
       // Not an ace, returning value
       if (value !== 'ace') {
+        if (this.owner === 'Player') {
+          console.log(`get card value ${value} = ${value}`);
+        }
         return parseInt(value); // eslint-disable-line radix
       }
 
       // Pair of aces = 12
-      if (this.cards.length === 2 && this.cards.filter((c) => c.value !== 'ace').length === 0) {
+      const nbAces = this.cards.filter((c) => c.value === 'ace').length;
+      if (this.cards.length === 2 && nbAces === 2) {
+        if (this.owner === 'Player') {
+          console.log(`get card value ${value} = 6`);
+        }
         return 6;
       }
 
@@ -71,7 +88,15 @@ export default {
       const otherCardsTotal = this.cards
         .filter((c) => c.value !== 'ace')
         .reduce((total, c) => total + c.value, 0);
-      return otherCardsTotal > 10 ? 1 : 11;
+      const aceValue = (otherCardsTotal > 10 || this.cards.length > 2) ? 1 : 11;
+      if (this.owner === 'Player') {
+        console.log(`get card value ${value} = ${aceValue}`);
+      }
+      return aceValue;
+    },
+    revealHiddenCard() {
+      // eslint-disable-next-line no-param-reassign
+      this.cards = this.cards.map((card) => { card.hidden = false; return card; });
     },
   },
   components: {

@@ -22,7 +22,6 @@
 
     <Hand ref="hand"
       class="player-cards"
-      :cards="cards"
       :showScore="showHandScore"
       owner="Player" />
   </div>
@@ -45,7 +44,6 @@ export default {
       isBetting: true,
       isPlaying: false,
       showHandScore: false,
-      cards: [],
       lastBet: 100, // initialzed with first bet
     };
   },
@@ -54,7 +52,7 @@ export default {
   },
   computed: {
     handScore() {
-      return this.cards.reduce((total, c) => total + this.$refs.hand.getCardValue(c.value), 0);
+      return this.$refs.hand.score;
     },
     money() {
       return this.$refs.playerWallet.money;
@@ -79,7 +77,7 @@ export default {
     dealCard(c) {
       const card = c;
       card.hidden = false;
-      this.cards.push(card);
+      this.$refs.hand.addCard(card);
       if (this.handScore > 21) {
         this.isPlaying = false;
         this.$refs.toast.create('BUST', 'bottom-center', 'danger', 1000);
@@ -131,13 +129,13 @@ export default {
       if (this.money === 0) {
         // Game over
         bus.$emit('gameOver');
-        this.cards = [];
+        this.$refs.hand.clear();
         this.showHandScore = false;
       }
     },
     // End of a turn, begining of a new one
     endOfTurn() {
-      this.cards = [];
+      this.$refs.hand.clear();
       this.isBetting = true;
       this.showHandScore = false;
       setTimeout(() => this.$refs.playerWallet.betValue(this.lastBet),
