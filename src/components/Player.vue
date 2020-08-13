@@ -6,9 +6,6 @@
 
     <Toast ref="toast" />
 
-    <Bet ref="bet"
-      :playerIsBetting="isBetting" />
-
     <Actions ref="actions"
       v-show="isPlaying"
       @stand="stand"
@@ -19,6 +16,9 @@
       :playerIsBetting="isBetting"
       :initialBet="lastBet"
       @clearBet="clearBet"/>
+
+    <Bet ref="bet"
+      :playerIsBetting="isBetting" />
 
     <Hand ref="hand"
       class="player-cards"
