@@ -71,19 +71,20 @@ export default {
       if (value !== 'ace') {
         return parseInt(value); // eslint-disable-line radix
       }
-
       // Pair of aces = 12
       const nbAces = this.cards.filter((c) => c.value === 'ace').length;
       if (this.cards.length === 2 && nbAces === 2) {
         return 6;
       }
-
-      // Computing the ace amoung other cards
-      const otherCardsTotal = this.cards
-        .filter((c) => c.value !== 'ace')
-        .reduce((total, c) => total + c.value, 0);
-      const aceValue = (otherCardsTotal > 10 || this.cards.length > 2) ? 1 : 11;
-      return aceValue;
+      // Only one ace in hand
+      if (nbAces === 1) {
+        // Value = 11 if the other cards's total <= 10
+        return this.cards
+          .filter((c) => c.value !== 'ace')
+          .reduce((total, c) => total + c.value, 0) > 10 ? 1 : 11;
+      }
+      // If more than 1 ace + other cards, ace can only count as 1
+      return 1;
     },
     revealHiddenCard() {
       // eslint-disable-next-line no-param-reassign
