@@ -56,23 +56,9 @@ export default {
   },
   methods: {
     // Deal cards to player and self
-    // dealCards() {
-    //   this.isPlaying = false;
-    //   return new Promise((next) => this.dealCardToPlayer(next))
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToPlayer(next), this.dealCardWait)))
-    // eslint-disable-next-line max-len
-    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
-    //     .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
-    // },
-    // Deal cards to player and self
     dealCards() {
-      const card1 = { value: 'ace', image: 'ace_of_spades.png' };
-      // const card2 = { value: 'ace', image: 'ace_of_clubs.png' };
       this.isPlaying = false;
-      return new Promise((next) => { bus.$emit('dealCard', card1); next(); })
+      return new Promise((next) => this.dealCardToPlayer(next))
         // eslint-disable-next-line max-len
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
         // eslint-disable-next-line max-len
@@ -81,6 +67,20 @@ export default {
         .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
         .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
     },
+    // Deal cards to player and self
+    // dealCards() {
+    //   const card1 = { value: 'ace', image: 'ace_of_spades.png' };
+    //   // const card2 = { value: 'ace', image: 'ace_of_clubs.png' };
+    //   this.isPlaying = false;
+    //   return new Promise((next) => { bus.$emit('dealCard', card1); next(); })
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToPlayer(next), this.dealCardWait)))
+    // eslint-disable-next-line max-len
+    //     .then(() => new Promise((next) => setTimeout(() => this.dealCardToSelf(next), this.dealCardWait)))
+    //     .then(() => new Promise((next) => { this.showHandScore = true; next(); }));
+    // },
     // Deal a card to the player
     dealCardToPlayer(next) {
       bus.$emit('dealCard', this.$refs.deck.drawCard());
