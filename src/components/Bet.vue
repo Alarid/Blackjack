@@ -73,10 +73,6 @@ export default {
       // eslint-disable-next-line no-unused-vars
       const valueClassName = `value-${value}`;
       return ['stackable-token', idx > 0 ? 'no-shadow' : '', valueClassName];
-      // return {
-      //   'stackable-token': true,
-      //   'no-shadow': idx > 0,
-      // };
     },
     // Get the translate property for the token, depending on its index
     tokenStyle(idx) {
@@ -128,32 +124,43 @@ export default {
     left: 50%;
     top: 50%;
 
-    &.token-enter-active, &.token-leave-active {
+    &.token-enter-active {
       transition: all 0.5s;
     }
-    &.token-enter, &.token-leave-to {
-      opacity: 0.5;
+    &.token-leave-active {
+      transition: all 0.2s;
+    }
+    &.token-enter {
       $translateY: translateY(50vh)
         translateY(calc(-#{$bank-tokens-pb} - 5px - 2 * #{$token-width} - 2 * #{$token-mb}));
 
+      &.value-1000 {
+        transform: translateX(-415px) $translateY
+          translateY(calc(#{$token-width} + #{$token-mb})) !important;
+      }
+      &.value-500 {
+        transform: translateX(-520px) $translateY
+          translateY(calc(#{$token-width} + #{$token-mb})) !important;
+      }
       &.value-100 {
         transform: translateX(-100px) $translateY !important;
       }
       &.value-50 {
-        transform: translateX(-230px) $translateY !important;
+        transform: translateX(-205px) $translateY !important;
       }
       &.value-25 {
-        transform: translateX(-330px) $translateY !important;
+        transform: translateX(-310px) $translateY !important;
       }
       &.value-5 {
-        transform: translateX(-430px) $translateY !important;
+        transform: translateX(-415px) $translateY !important;
       }
       &.value-1 {
-        transform: translateX(-530px) $translateY !important;
+        transform: translateX(-520px) $translateY !important;
       }
     }
-    &.token-enter-to, &.token-leave {
-      opacity: 1;
+    &.token-leave-to {
+      transform: translateX(-100px) translateY(40vh) !important;
+      opacity: 0 !important;
     }
   }
 

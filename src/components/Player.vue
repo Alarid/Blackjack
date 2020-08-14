@@ -6,11 +6,6 @@
 
     <Toast ref="toast" />
 
-    <Actions ref="actions"
-      v-show="isPlaying"
-      @stand="stand"
-      @double="double"/>
-
     <PlayerWallet ref="playerWallet"
       :initialCash="initialCash"
       :playerIsBetting="isBetting"
@@ -19,6 +14,11 @@
 
     <Bet ref="bet"
       :playerIsBetting="isBetting" />
+
+    <Actions ref="actions"
+      v-show="isPlaying"
+      @stand="stand"
+      @double="double"/>
 
     <Hand ref="hand"
       class="player-cards"

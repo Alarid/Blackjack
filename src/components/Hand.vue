@@ -1,10 +1,14 @@
 <template>
-  <div class="cards-area" v-if="cards.length > 0" >
+  <div class="cards-area" v-show="cards.length > 0" >
     <div class="cards position-relative h-100" :style="style">
-      <Card v-for="(card, idx) in cards" :key="idx"
-        :filename="card.image"
-        :hidden="card.hidden"
-        :idxInHand="idx" />
+      <transition-group name="card" mode="out-in" :duration="500">
+        <template v-for="(card, idx) in cards">
+          <Card  :key="idx+1"
+            :filename="card.image"
+            :hidden="card.hidden"
+            :idxInHand="idx" />
+        </template>
+      </transition-group>
     </div>
 
     <div v-if="showScore">
@@ -113,6 +117,16 @@ $score-radius: 80px;
 
   &.dealer-cards {
     top: $margin;
+  }
+
+  .card-enter-active, .card-leave-active {
+    transition: all 0.5s;
+  }
+  .card-enter {
+    transform: translate(500px,-110vh) !important;
+  }
+  .card-leave-to {
+    transform: translate(-500px,-110vh) !important;
   }
 
   .score {

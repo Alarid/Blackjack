@@ -51,9 +51,11 @@ export default {
   methods: {
     // Begining of the turn
     beginTurn() {
-      this.$refs.dealer.dealCards().then(() => {
-        this.$refs.player.play();
-      });
+      setTimeout(() => {
+        this.$refs.dealer.dealCards().then(() => {
+          this.$refs.player.play();
+        });
+      }, this.$store.state.delays.dealCardWait);
     },
     // Player stands
     playerStands() {

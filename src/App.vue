@@ -7,5 +7,6 @@
 <style lang="scss">
 body {
   background-color: #163B3C !important;
+  overflow: hidden;
 }
 </style>
