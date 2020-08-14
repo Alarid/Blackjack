@@ -159,7 +159,7 @@ export default {
       }
     }
     &.token-leave-to {
-      transform: translateX(-100px) translateY(40vh) !important;
+      // transform: translateX(-100px) translateY(40vh) !important;
       opacity: 0 !important;
     }
   }
